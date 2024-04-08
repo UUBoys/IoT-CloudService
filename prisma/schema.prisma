@@ -1,0 +1,51 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  userImage String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  plants    Plant[]
+  rooms     Room[]
+}
+
+model Plant {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  roomId    String?
+  room      Room?    @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  plants    Plant[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Gateway {
+  id        String   @id @default(cuid())
+  name      String
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

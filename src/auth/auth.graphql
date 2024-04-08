@@ -1,0 +1,33 @@
+type Query {
+    ping: String!
+}
+
+type Mutation {
+    login(
+        loginInput: LoginInput!
+    ): AuthResult
+
+    register(
+        registerInput: RegisterInput!
+    ): AuthResult
+}
+
+# Types
+
+type AuthResult {
+    "This is the token used for authentication (JWT Bearer)"
+    token: String!
+}
+
+# Inputs
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+input RegisterInput {
+    email: String!
+    password: String!
+    name: String!
+}
