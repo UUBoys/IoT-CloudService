@@ -28,6 +28,7 @@ model Plant {
   owner     User     @relation(fields: [ownerId], references: [id])
   roomId    String?
   room      Room?    @relation(fields: [roomId], references: [id])
+  measurements Measurement[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -46,6 +47,16 @@ model Gateway {
   id        String   @id @default(cuid())
   name      String
   token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Measurement {
+  id        String   @id @default(cuid())
+  value     Float
+  unit      String
+  plantId   String
+  plant     Plant    @relation(fields: [plantId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
