@@ -22,8 +22,8 @@ model User {
 
 model Plant {
   id        String   @id @default(cuid())
-  name      String
-  type      String
+  name      String?
+  type      String?
   ownerId   String?
   token     String  @unique
   paired    Boolean

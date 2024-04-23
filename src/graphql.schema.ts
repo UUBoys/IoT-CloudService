@@ -19,14 +19,35 @@ export class RegisterInput {
     name: string;
 }
 
-export class CreatePlantInput {
+export class PairPlantInput {
     name: string;
     type: string;
+    token: string;
 }
 
 export class UpdatePlantInput {
+    plantId?: Nullable<string>;
     name?: Nullable<string>;
     type?: Nullable<string>;
+}
+
+export class RoomPlantInput {
+    plantId: string;
+}
+
+export class CreateRoomInput {
+    name: string;
+    plants?: Nullable<Nullable<RoomPlantInput>[]>;
+}
+
+export class AddPlantsToRoomInput {
+    roomId: string;
+    plants?: Nullable<Nullable<RoomPlantInput>[]>;
+}
+
+export class RemovePlantsFromRoomInput {
+    roomId: string;
+    plants?: Nullable<Nullable<RoomPlantInput>[]>;
 }
 
 export abstract class IQuery {
@@ -35,6 +56,10 @@ export abstract class IQuery {
     abstract plants(): Nullable<Plant>[] | Promise<Nullable<Plant>[]>;
 
     abstract plant(id: string): Nullable<Plant> | Promise<Nullable<Plant>>;
+
+    abstract rooms(): Nullable<Nullable<Room>[]> | Promise<Nullable<Nullable<Room>[]>>;
+
+    abstract room(id: string): Nullable<Room> | Promise<Nullable<Room>>;
 }
 
 export abstract class IMutation {
@@ -42,30 +67,23 @@ export abstract class IMutation {
 
     abstract register(registerInput: RegisterInput): Nullable<AuthResult> | Promise<Nullable<AuthResult>>;
 
-    abstract createPlant(createPlantInput: CreatePlantInput): Plant | Promise<Plant>;
+    abstract pairPlant(pairPlantInput: PairPlantInput): Plant | Promise<Plant>;
 
     abstract updatePlant(updatePlantInput: UpdatePlantInput): Plant | Promise<Plant>;
 
-    abstract removePlant(id: number): Nullable<Plant> | Promise<Nullable<Plant>>;
+    abstract removePlant(id: number): RemovePlantResponse | Promise<RemovePlantResponse>;
+
+    abstract createRoom(room: CreateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
+
+    abstract addPlantsToRoom(addPlants: AddPlantsToRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
+
+    abstract removePlantsFromRoom(removePlants: RemovePlantsFromRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
+
+    abstract deleteRoom(roomId: string): Nullable<Room> | Promise<Nullable<Room>>;
 }
 
 export class AuthResult {
     token: string;
-}
-
-export class Plant {
-    id: string;
-    type: string;
-    name: string;
-    room?: Nullable<Room>;
-    notifications?: Nullable<Nullable<Notification>[]>;
-    measurements?: Nullable<Nullable<Measurement>[]>;
-}
-
-export class Notification {
-    id: string;
-    message: string;
-    date: string;
 }
 
 export class Measurement {
@@ -74,9 +92,25 @@ export class Measurement {
     date: string;
 }
 
+export class Plant {
+    id: string;
+    type: string;
+    name: string;
+    room?: Nullable<Room>;
+    lastHeartbeat?: Nullable<string>;
+    measurements?: Nullable<Nullable<Measurement>[]>;
+}
+
+export class RemovePlantResponse {
+    id: string;
+    name: string;
+    unpaired: boolean;
+}
+
 export class Room {
     id: string;
     name: string;
+    plants?: Nullable<Nullable<Plant>[]>;
 }
 
 type Nullable<T> = T | null;

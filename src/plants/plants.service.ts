@@ -1,15 +1,30 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePlantInput } from './dto/create-plant.input';
-import { UpdatePlantInput } from './dto/update-plant.input';
 import { Prisma } from '@prisma/client';
 import { prisma } from 'src/util/db/client';
+import {PairPlantDto} from "./dto/plant.dto";
 
 @Injectable()
 export class PlantsService {
-  create(createPlantInput: Prisma.PlantCreateInput) {
-    // TODO: Handle pair process of plant
-    return prisma.plant.create({
-      data: createPlantInput,
+  async pair(dto: PairPlantDto, userId: string) {
+    let plant = await prisma.plant.findFirst({
+        where: {
+            token: dto.token,
+        },
+      });
+
+    if(!plant) {
+        throw new NotFoundException('Invalid token');
+    }
+
+    return prisma.plant.update({
+        where: {
+            id: plant.id,
+        },
+        data: {
+            ownerId: userId,
+            name: dto.name,
+            type: dto.type,
+        },
     });
   }
 
@@ -36,6 +51,15 @@ export class PlantsService {
     return plant;
   }
 
+  findByRoomId(roomId: string, ownerId: string) {
+    return prisma.plant.findMany({
+      where: {
+        roomId: roomId,
+        ownerId: ownerId,
+      },
+    });
+  }
+
   update(plant: Prisma.PlantUpdateInput, ownerId: string) {
     let updatedPlant = prisma.plant.update({
       where: {
@@ -52,10 +76,7 @@ export class PlantsService {
     return updatedPlant;
   }
 
-  remove(id: string, ownerId: string) {
-    // TODO: Handle de-pair process of a plant
-    // The plant should be able 
-
+  unpair(id: string, ownerId: string) {
     let plant = prisma.plant.findFirst({
       where: {
         id: id,
@@ -67,11 +88,14 @@ export class PlantsService {
       throw new NotFoundException('Plant not found');
     }
 
-    return prisma.plant.delete({
+    return prisma.plant.update({
       where: {
         id: id,
         ownerId: ownerId,
         },
+      data: {
+        ownerId: null,
+      }
     });
   }
 }

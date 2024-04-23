@@ -1,0 +1,37 @@
+type Room {
+    id: String!
+    name: String!
+    plants: [Plant]
+}
+
+input RoomPlantInput {
+    plantId: String!
+}
+
+input CreateRoomInput {
+    name: String!
+    plants: [RoomPlantInput]
+}
+
+input AddPlantsToRoomInput {
+    roomId: String!
+    plants: [RoomPlantInput]
+}
+
+input RemovePlantsFromRoomInput {
+    roomId: String!
+    plants: [RoomPlantInput]
+}
+
+
+type Query {
+    rooms: [Room]
+    room(id: String!): Room
+}
+
+type Mutation {
+    createRoom(room: CreateRoomInput!): Room
+    addPlantsToRoom(addPlants: AddPlantsToRoomInput!): Room
+    removePlantsFromRoom(removePlants: RemovePlantsFromRoomInput!): Room
+    deleteRoom(roomId: String!): Room
+}

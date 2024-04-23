@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { comparePassword } from '../util/bcrypt/hash';
+import {comparePassword, hashPassword} from '../util/bcrypt/hash';
 import { AuthResult } from '../graphql.schema';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 
@@ -20,11 +20,12 @@ export class AuthService {
     }
 
     // Password is not correct
-    if (await comparePassword(credentials.password, user.password)) {
+    let passwordMatch = await comparePassword(credentials.password, user.password);
+    if (!passwordMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = {
+    const payload: JWTUser = {
       uuid: user.id,
       email: user.email,
       sub: user.id,
@@ -36,9 +37,10 @@ export class AuthService {
   }
 
   async register(credentials: RegisterDto): Promise<AuthResult> {
+    credentials.password = await hashPassword(credentials.password);
     const user = await this.userService.create(credentials);
 
-    const payload = {
+    const payload: JWTUser = {
       uuid: user.id,
       email: user.email,
       sub: user.id,

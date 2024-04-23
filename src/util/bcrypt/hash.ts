@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = bcrypt.genSaltSync(10);
-  return bcrypt.hashSync(password, salt);
+  return bcrypt.hash(password, salt);
 }
 
 export async function comparePassword(

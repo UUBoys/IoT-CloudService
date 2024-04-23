@@ -35,8 +35,10 @@ export class DeviceGuard implements CanActivate {
       
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
+      await this.deviceService.heartbeat(plant.id)
       request["plant"] = plant;
     } catch {
+      // Log that device tried to access but is missing from database?
       throw new UnauthorizedException("Plant is not present in the database");
     }
     return true;

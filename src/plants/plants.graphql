@@ -3,35 +3,26 @@ type Plant {
   type: String!
   name: String!
   room: Room
-  notifications: [Notification]
+  lastHeartbeat: String
   measurements: [Measurement]
 }
 
-type Notification {
-  id: String!
-  message: String!
-  date: String!
-}
-
-type Measurement {
-  id: String!
-  value: Float!
-  date: String!
-}
-
-type Room {
-  id: String!
-  name: String!
-}
-
-input CreatePlantInput {
+input PairPlantInput {
   name: String!
   type: String!
+  token: String!
 }
 
 input UpdatePlantInput {
+  plantId: String
   name: String
   type: String
+}
+
+type RemovePlantResponse {
+  id: String!
+  name: String!
+  unpaired: Boolean!
 }
 
 type Query {
@@ -40,7 +31,7 @@ type Query {
 }
 
 type Mutation {
-  createPlant(createPlantInput: CreatePlantInput!): Plant!
+  pairPlant(pairPlantInput: PairPlantInput!): Plant!
   updatePlant(updatePlantInput: UpdatePlantInput!): Plant!
-  removePlant(id: Int!): Plant
+  removePlant(id: Int!): RemovePlantResponse!
 }

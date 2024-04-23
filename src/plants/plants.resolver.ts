@@ -1,34 +1,98 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { PlantsService } from './plants.service';
-import { CreatePlantInput } from './dto/create-plant.input';
-import { UpdatePlantInput } from './dto/update-plant.input';
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
+import {PlantsService} from './plants.service';
+import {AuthGuard} from "../auth/auth.guard";
+import {UseGuards} from "@nestjs/common";
+import {User} from "../decorators";
+import {Measurement, Plant, RemovePlantResponse, Room} from "../graphql.schema";
+import {PairPlantDto, UpdatePlantDto} from "./dto/plant.dto";
+import {MeasurementsService} from "../measurements/measurements.service";
+import {RoomsService} from "../rooms/rooms.service";
 
 @Resolver('Plant')
+@UseGuards(AuthGuard)
 export class PlantsResolver {
-  constructor(private readonly plantsService: PlantsService) {}
+    constructor(private readonly plantsService: PlantsService,
+                private readonly measurementsService: MeasurementsService,
+                private readonly roomsService: RoomsService) {
+    }
 
-  @Mutation('createPlant')
-  create(@Args('createPlantInput') createPlantInput: CreatePlantInput) {
-    return this.plantsService.create(createPlantInput);
-  }
+    @ResolveField('measurements')
+    async getMeasurements(@Parent() plant: Plant): Promise<Measurement[]> {
+        const measurements = await this.measurementsService.getMeasurements(plant.id);
 
-  @Query('plants')
-  findAll() {
-    return this.plantsService.findAll();
-  }
+        const dtoOut = measurements.map(measurement => {
+            return {
+                id: measurement.id,
+                value: measurement.value,
+                date: measurement.createdAt.toISOString(),
+            }
+        });
 
-  @Query('plant')
-  findOne(@Args('id') id: number) {
-    return this.plantsService.findOne(id);
-  }
+        return dtoOut;
+    }
 
-  @Mutation('updatePlant')
-  update(@Args('updatePlantInput') updatePlantInput: UpdatePlantInput) {
-    return this.plantsService.update(updatePlantInput.id, updatePlantInput);
-  }
+    @ResolveField('room')
+    async getRoom(@Parent() plant: Plant): Promise<Room> {
+        const room = await this.roomsService.getRoomByPlantId(plant.id);
 
-  @Mutation('removePlant')
-  remove(@Args('id') id: number) {
-    return this.plantsService.remove(id);
-  }
+        return room;
+    }
+
+    @Query('plants')
+    async getPlants(@User() user: JWTUser): Promise<Plant[]> {
+        const plants = await this.plantsService.findAllForUser(user.uuid);
+
+        const dtoOut = plants.map(plant => {
+            return {
+                id: plant.id,
+                name: plant.name,
+                type: plant.type,
+            }
+        });
+
+        return dtoOut;
+    }
+
+    @Query('plant')
+    async getPlant(@Args('id') id: string, @User() user: JWTUser): Promise<Plant> {
+        const plant = await this.plantsService.findOne(id, user.uuid);
+
+        return {
+            id: plant.id,
+            name: plant.name,
+            type: plant.type,
+        };
+    }
+
+    @Mutation('pairPlant')
+    async pairPlant(@Args('createPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
+        const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
+
+        return {
+            id: plant.id,
+            name: plant.name,
+            type: plant.type,
+        };
+    }
+
+    @Mutation('updatePlant')
+    async updatePlant(@Args('updatePlantInput') updatePlantInput: UpdatePlantDto, @User() user: JWTUser): Promise<Plant> {
+        const plant = await this.plantsService.update(updatePlantInput, user.uuid);
+
+        return {
+            id: plant.id,
+            name: plant.name,
+            type: plant.type,
+        };
+    }
+
+    @Mutation('removePlant')
+    async removePlant(@Args('id') id: string, @User() user: JWTUser): Promise<RemovePlantResponse> {
+        let plant = await this.plantsService.unpair(id, user.uuid);
+        return {
+            id: plant.id,
+            name: plant.name,
+            unpaired: true
+        };
+    }
 }
