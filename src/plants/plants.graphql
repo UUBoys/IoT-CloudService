@@ -1,0 +1,46 @@
+type Plant {
+  id: String!
+  type: String!
+  name: String!
+  room: Room
+  notifications: [Notification]
+  measurements: [Measurement]
+}
+
+type Notification {
+  id: String!
+  message: String!
+  date: String!
+}
+
+type Measurement {
+  id: String!
+  value: Float!
+  date: String!
+}
+
+type Room {
+  id: String!
+  name: String!
+}
+
+input CreatePlantInput {
+  name: String!
+  type: String!
+}
+
+input UpdatePlantInput {
+  name: String
+  type: String
+}
+
+type Query {
+  plants: [Plant]!
+  plant(id: String!): Plant
+}
+
+type Mutation {
+  createPlant(createPlantInput: CreatePlantInput!): Plant!
+  updatePlant(updatePlantInput: UpdatePlantInput!): Plant!
+  removePlant(id: Int!): Plant
+}

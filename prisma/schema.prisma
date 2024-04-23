@@ -24,11 +24,26 @@ model Plant {
   id        String   @id @default(cuid())
   name      String
   type      String
-  ownerId   String
-  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String?
+  token     String  @unique
+  paired    Boolean
+  owner     User?     @relation(fields: [ownerId], references: [id])
   roomId    String?
   room      Room?    @relation(fields: [roomId], references: [id])
+  tasks     Task[]
   measurements Measurement[]
+  lastHeartbeat DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  name      String
+  completed Boolean
+  success   Boolean
+  plantId   String
+  plant     Plant    @relation(fields: [plantId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -43,20 +58,12 @@ model Room {
   updatedAt DateTime @updatedAt
 }
 
-model Gateway {
-  id        String   @id @default(cuid())
-  name      String
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Measurement {
   id        String   @id @default(cuid())
   value     Float
   unit      String
+  measurementType String
   plantId   String
   plant     Plant    @relation(fields: [plantId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

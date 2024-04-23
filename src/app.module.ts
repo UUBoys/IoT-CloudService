@@ -3,7 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from './auth/auth.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { GatewaysModule } from './gateways/gateways.module';
+import { PlantsModule } from './plants/plants.module';
+import { DevicesModule } from './devices/devices.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { GatewaysModule } from './gateways/gateways.module';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     AuthModule,
-    GatewaysModule,
+    PlantsModule,
+    DevicesModule,
   ],
 })
 export class AppModule {}
