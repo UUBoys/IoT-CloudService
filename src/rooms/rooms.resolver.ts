@@ -1,6 +1,7 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
-import { RoomsService } from './rooms.service';
-import {User} from "../decorators";import {IMutation, IQuery, Plant, Room} from "../graphql.schema";
+import {RoomsService} from './rooms.service';
+import {User} from "../decorators";
+import {IMutation, IQuery, Plant, Room} from "../graphql.schema";
 import {AuthGuard} from "../auth/auth.guard";
 import {Body, UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
@@ -9,12 +10,13 @@ import {AddPlantsToRoomDto, CreateRoomDto, RemovePlantsFromRoomDto} from "./dto/
 @Resolver('Room')
 @UseGuards(AuthGuard)
 export class RoomsResolver {
-  constructor(private readonly roomsService: RoomsService,
-              private readonly plantsService: PlantsService) {}
+    constructor(private readonly roomsService: RoomsService,
+                private readonly plantsService: PlantsService) {
+    }
 
-  @ResolveField('plants')
-    async getPlants(@Parent() room: Room, @User() user: JWTUser): Promise<Plant[]> {
-        const plants = await this.plantsService.findByRoomId(room.id, user.uuid);
+    @ResolveField('plants')
+    async getPlants(@Parent() room: Room): Promise<Plant[]> {
+        const plants = await this.plantsService.findByRoomId(room.id);
 
         return plants.map(plant => {
             return {
@@ -25,7 +27,7 @@ export class RoomsResolver {
         });
     }
 
-  @Query('rooms')
+    @Query('rooms')
     async rooms(@User() user: JWTUser): Promise<Room[]> {
         let rooms = await this.roomsService.getRoomsByUserId(user.uuid);
 
@@ -37,7 +39,7 @@ export class RoomsResolver {
         });
     }
 
-  @Query('room')
+    @Query('room')
     async getRoom(@Args('id') id: string, @User() user: JWTUser): Promise<Room> {
         const room = await this.roomsService.getRoomById(id, user.uuid);
 
@@ -53,7 +55,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
-            name: room.name,
+            name: room.name
         }
     }
 

@@ -33,5 +33,5 @@ type Query {
 type Mutation {
   pairPlant(pairPlantInput: PairPlantInput!): Plant!
   updatePlant(updatePlantInput: UpdatePlantInput!): Plant!
-  removePlant(id: Int!): RemovePlantResponse!
+  removePlant(id: String!): RemovePlantResponse!
 }

@@ -51,11 +51,10 @@ export class PlantsService {
     return plant;
   }
 
-  findByRoomId(roomId: string, ownerId: string) {
+  findByRoomId(roomId: string) {
     return prisma.plant.findMany({
       where: {
         roomId: roomId,
-        ownerId: ownerId,
       },
     });
   }

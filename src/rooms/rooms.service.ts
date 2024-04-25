@@ -1,6 +1,7 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {prisma} from "../util/db/client";
 import {CreateRoomDto} from "./dto/room.dto";
+import crypto from "crypto";
 
 @Injectable()
 export class RoomsService {
@@ -8,7 +9,11 @@ export class RoomsService {
         const room = prisma.room.findFirst({
             where: {
                 id: roomId,
-                ownerId: userId
+                users: {
+                    some: {
+                        userId: userId
+                    }
+                }
             }
         });
 
@@ -24,15 +29,11 @@ export class RoomsService {
             where: {
                 plants: {
                     some: {
-                        id: plantId
+                        id: plantId,
                     }
-                }
+                },
             }
         });
-
-        if (!room) {
-            throw new NotFoundException('Room not found');
-        }
 
         return room;
     }
@@ -40,16 +41,23 @@ export class RoomsService {
     getRoomsByUserId(userId: string) {
         return prisma.room.findMany({
             where: {
-                ownerId: userId
+                users: {
+                    some: {
+                        userId: userId
+                    }
+                }
             }
         })
     }
 
-    createRoom(dto: CreateRoomDto, userId: string) {
-        return prisma.room.create({
+    async createRoom(dto: CreateRoomDto, userId: string) {
+        let inviteCode = crypto.randomBytes(32).toString("hex");
+
+        const room = await prisma.room.create({
             data: {
                 name: dto.name,
                 ownerId: userId,
+                inviteCode: inviteCode,
                 plants: {
                     connect: dto.plants.map(plant => {
                         return {
@@ -57,10 +65,18 @@ export class RoomsService {
                             ownerId: userId
                         }
                     })
-
                 }
+            },
+        });
+
+        const user = prisma.roomUsers.create({
+            data: {
+                userId: userId,
+                roomId: room.id
             }
         });
+
+        return room;
     }
 
     deleteRoom(roomId: string, userId: string) {
