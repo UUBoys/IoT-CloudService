@@ -4,7 +4,7 @@ import {User} from "../decorators";import {IMutation, IQuery, Plant, Room} from 
 import {AuthGuard} from "../auth/auth.guard";
 import {Body, UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
-import {AddPlantsToRoomDto, RemovePlantsFromRoomDto} from "./dto/room.dto";
+import {AddPlantsToRoomDto, CreateRoomDto, RemovePlantsFromRoomDto} from "./dto/room.dto";
 
 @Resolver('Room')
 @UseGuards(AuthGuard)
@@ -48,8 +48,8 @@ export class RoomsResolver {
     }
 
     @Mutation('createRoom')
-    async createRoom(@Args('name') name: string, @User() user: JWTUser): Promise<Room> {
-        const room = await this.roomsService.createRoom(name, user.uuid);
+    async createRoom(@Body() createDto: CreateRoomDto, @User() user: JWTUser): Promise<Room> {
+        const room = await this.roomsService.createRoom(createDto, user.uuid);
 
         return {
             id: room.id,

@@ -1,5 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {prisma} from "../util/db/client";
+import {CreateRoomDto} from "./dto/room.dto";
 
 @Injectable()
 export class RoomsService {
@@ -44,11 +45,20 @@ export class RoomsService {
         })
     }
 
-    createRoom(name: string, userId: string) {
+    createRoom(dto: CreateRoomDto, userId: string) {
         return prisma.room.create({
             data: {
-                name: name,
-                ownerId: userId
+                name: dto.name,
+                ownerId: userId,
+                plants: {
+                    connect: dto.plants.map(plant => {
+                        return {
+                            id: plant.plantId,
+                            ownerId: userId
+                        }
+                    })
+
+                }
             }
         });
     }
