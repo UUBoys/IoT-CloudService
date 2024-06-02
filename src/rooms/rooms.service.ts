@@ -69,7 +69,7 @@ export class RoomsService {
             },
         });
 
-        const user = prisma.roomUsers.create({
+        const user = await prisma.roomUsers.create({
             data: {
                 userId: userId,
                 roomId: room.id
