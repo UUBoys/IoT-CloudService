@@ -1,6 +1,7 @@
 type Room {
     id: String!
     name: String!
+    inviteCode: String
     plants: [Plant]
 }
 
@@ -25,7 +26,7 @@ input RemovePlantsFromRoomInput {
 
 input AddUserToRoomInput {
     roomId: String!
-    userEmail: String!
+    inviteCode: String!
 }
 
 type Query {

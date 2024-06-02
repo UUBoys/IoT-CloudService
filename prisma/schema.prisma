@@ -27,7 +27,9 @@ model Plant {
   type      String?
   ownerId   String?
   token     String  @unique
-  paired    Boolean
+  pairingCode String @unique
+  paired    Boolean @default(false)
+  userPaired Boolean @default(false)
   owner     User?     @relation(fields: [ownerId], references: [id])
   roomId    String?
   room      Room?    @relation(fields: [roomId], references: [id])

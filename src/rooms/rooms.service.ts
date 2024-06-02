@@ -39,7 +39,12 @@ export class RoomsService {
     }
 
     getRoomsByUserId(userId: string) {
-        return prisma.room.findMany({
+        const ownerRooms = prisma.room.findMany({
+            select: {
+                id: true,
+                name: true,
+                inviteCode: true,
+            },
             where: {
                 users: {
                     some: {
@@ -47,7 +52,22 @@ export class RoomsService {
                     }
                 }
             }
-        })
+        });
+
+        const userRooms = prisma.room.findMany({
+            select: {
+                id: true,
+                name: true,
+                inviteCode: false,
+            },
+            where: {
+                ownerId: userId
+            }
+        });
+
+        const allRooms = prisma.$transaction([ownerRooms, userRooms]);
+
+        return allRooms;
     }
 
     async createRoom(dto: CreateRoomDto, userId: string) {
@@ -156,20 +176,20 @@ export class RoomsService {
         });
     }
 
-    addUserToRoom(roomId: string, userId: string, addingUserEmail: string) {
+    addUserToRoom(roomId: string, userId: string, inviteCode: string) {
         const room = prisma.room.findFirst({
             where: {
-                id: roomId, ownerId: userId
+                id: roomId, inviteCode: inviteCode
             }
         });
 
         if (!room) {
-            throw new NotFoundException('Room not found/You are not the owner');
+            throw new NotFoundException('Room not found/wrong invite code');
         }
 
         const user = prisma.user.findFirst({
             where: {
-                email: addingUserEmail
+                id: userId
             }
         });
 

@@ -22,7 +22,7 @@ export class RegisterInput {
 export class PairPlantInput {
     name: string;
     type: string;
-    token: string;
+    pairingCode: string;
 }
 
 export class UpdatePlantInput {
@@ -52,7 +52,7 @@ export class RemovePlantsFromRoomInput {
 
 export class AddUserToRoomInput {
     roomId: string;
-    userEmail: string;
+    inviteCode: string;
 }
 
 export abstract class IQuery {
@@ -80,7 +80,7 @@ export abstract class IMutation {
 
     abstract createRoom(room: CreateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 
-    abstract addUserToRoom(roomId: AddUserToRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
+    abstract addUserToRoom(addUser: AddUserToRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
 
     abstract addPlantsToRoom(addPlants: AddPlantsToRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 
@@ -117,6 +117,7 @@ export class RemovePlantResponse {
 export class Room {
     id: string;
     name: string;
+    inviteCode?: Nullable<string>;
     plants?: Nullable<Nullable<Plant>[]>;
 }
 

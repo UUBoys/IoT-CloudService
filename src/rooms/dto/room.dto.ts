@@ -50,6 +50,6 @@ export class AddUserToRoomDto extends AddUserToRoomInput {
     @Length(3)
     roomId: string;
 
-    @IsEmail()
-    userEmail: string;
+    @Length(64)
+    inviteCode: string;
 }

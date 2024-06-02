@@ -31,10 +31,21 @@ export class RoomsResolver {
     async rooms(@User() user: JWTUser): Promise<Room[]> {
         let rooms = await this.roomsService.getRoomsByUserId(user.uuid);
 
-        return rooms.map(room => {
-            return {
-                id: room.id,
-                name: room.name,
+        // Flatten the array of arrays
+        let flatRooms = rooms.flat();
+
+        return flatRooms.map(room => {
+            if ('inviteCode' in room && room.inviteCode === null) {
+                return {
+                    id: room.id,
+                    name: room.name,
+                    inviteCode: room.inviteCode
+                }
+            } else {
+                return {
+                    id: room.id,
+                    name: room.name,
+                }
             }
         });
     }
@@ -95,7 +106,7 @@ export class RoomsResolver {
 
     @Mutation('addUserToRoom')
     async addUserToRoom(@Args('addUser') addUserToRoom: AddUserToRoomDto, @User() user: JWTUser): Promise<boolean> {
-        await this.roomsService.addUserToRoom(addUserToRoom.roomId, user.uuid, addUserToRoom.userEmail);
+        await this.roomsService.addUserToRoom(addUserToRoom.roomId, user.uuid, addUserToRoom.inviteCode);
 
         return true;
     }

@@ -9,7 +9,7 @@ export class PairPlantDto extends PairPlantInput {
     type: string;
 
     @IsNotEmpty()
-    token: string;
+    pairingCode: string;
 }
 
 export class UpdatePlantDto extends UpdatePlantInput {

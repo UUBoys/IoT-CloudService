@@ -10,7 +10,7 @@ type Plant {
 input PairPlantInput {
   name: String!
   type: String!
-  token: String!
+  pairingCode: String!
 }
 
 input UpdatePlantInput {

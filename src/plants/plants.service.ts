@@ -8,12 +8,16 @@ export class PlantsService {
   async pair(dto: PairPlantDto, userId: string) {
     let plant = await prisma.plant.findFirst({
         where: {
-            token: dto.token,
+            pairingCode: dto.pairingCode,
         },
       });
 
     if(!plant) {
-        throw new NotFoundException('Invalid token');
+        throw new NotFoundException('Invalid pairing code');
+    }
+
+    if(plant.userPaired) {
+        throw new NotFoundException('Plant already paired');
     }
 
     return prisma.plant.update({
@@ -24,6 +28,7 @@ export class PlantsService {
             ownerId: userId,
             name: dto.name,
             type: dto.type,
+            userPaired: true,
         },
     });
   }

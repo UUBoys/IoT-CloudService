@@ -65,7 +65,7 @@ export class PlantsResolver {
     }
 
     @Mutation('pairPlant')
-    async pairPlant(@Args('createPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
+    async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
         const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
 
         return {
