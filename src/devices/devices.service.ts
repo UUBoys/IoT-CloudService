@@ -1,7 +1,6 @@
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {prisma} from "src/util/db/client";
 import {Prisma} from "@prisma/client";
-import {UpdateTaskDto} from "./dto/update-task.dto";
 
 @Injectable()
 export class DevicesService {
@@ -63,10 +62,6 @@ export class DevicesService {
                 id,
             },
         });
-
-        if (device.paired) {
-            throw new BadRequestException("Device already paired");
-        }
 
         return prisma.plant.update({
             where: {

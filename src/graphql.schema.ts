@@ -50,6 +50,11 @@ export class RemovePlantsFromRoomInput {
     plants?: Nullable<Nullable<RoomPlantInput>[]>;
 }
 
+export class AddUserToRoomInput {
+    roomId: string;
+    userEmail: string;
+}
+
 export abstract class IQuery {
     abstract ping(): string | Promise<string>;
 
@@ -71,9 +76,11 @@ export abstract class IMutation {
 
     abstract updatePlant(updatePlantInput: UpdatePlantInput): Plant | Promise<Plant>;
 
-    abstract removePlant(id: number): RemovePlantResponse | Promise<RemovePlantResponse>;
+    abstract removePlant(id: string): RemovePlantResponse | Promise<RemovePlantResponse>;
 
     abstract createRoom(room: CreateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
+
+    abstract addUserToRoom(roomId: AddUserToRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
 
     abstract addPlantsToRoom(addPlants: AddPlantsToRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 

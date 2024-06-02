@@ -23,6 +23,10 @@ input RemovePlantsFromRoomInput {
     plants: [RoomPlantInput]
 }
 
+input AddUserToRoomInput {
+    roomId: String!
+    userEmail: String!
+}
 
 type Query {
     rooms: [Room]
@@ -31,6 +35,7 @@ type Query {
 
 type Mutation {
     createRoom(room: CreateRoomInput!): Room
+    addUserToRoom(addUser: AddUserToRoomInput!): Boolean
     addPlantsToRoom(addPlants: AddPlantsToRoomInput!): Room
     removePlantsFromRoom(removePlants: RemovePlantsFromRoomInput!): Room
     deleteRoom(roomId: String!): Room

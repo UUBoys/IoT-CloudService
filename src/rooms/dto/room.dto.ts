@@ -1,5 +1,11 @@
-import {AddPlantsToRoomInput, CreateRoomInput, RemovePlantsFromRoomInput, RoomPlantInput} from "../../graphql.schema";
-import {ArrayMinSize, IsArray, IsOptional, Length, ValidateNested} from "class-validator";
+import {
+    AddPlantsToRoomInput,
+    AddUserToRoomInput,
+    CreateRoomInput,
+    RemovePlantsFromRoomInput,
+    RoomPlantInput
+} from "../../graphql.schema";
+import {ArrayMinSize, IsArray, IsEmail, IsOptional, Length, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
 
 class RoomPlantDto extends RoomPlantInput {
@@ -38,4 +44,12 @@ export class RemovePlantsFromRoomDto extends RemovePlantsFromRoomInput{
     @ArrayMinSize(1)
     @Type(() => RoomPlantDto)
     plants: RoomPlantDto[];
+}
+
+export class AddUserToRoomDto extends AddUserToRoomInput {
+    @Length(3)
+    roomId: string;
+
+    @IsEmail()
+    userEmail: string;
 }

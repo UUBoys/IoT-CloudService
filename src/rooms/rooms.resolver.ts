@@ -1,11 +1,11 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
 import {RoomsService} from './rooms.service';
 import {User} from "../decorators";
-import {IMutation, IQuery, Plant, Room} from "../graphql.schema";
+import {Plant, Room} from "../graphql.schema";
 import {AuthGuard} from "../auth/auth.guard";
 import {Body, UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
-import {AddPlantsToRoomDto, CreateRoomDto, RemovePlantsFromRoomDto} from "./dto/room.dto";
+import {AddPlantsToRoomDto, AddUserToRoomDto, CreateRoomDto, RemovePlantsFromRoomDto} from "./dto/room.dto";
 
 @Resolver('Room')
 @UseGuards(AuthGuard)
@@ -50,17 +50,17 @@ export class RoomsResolver {
     }
 
     @Mutation('createRoom')
-    async createRoom(@Body() createDto: CreateRoomDto, @User() user: JWTUser): Promise<Room> {
-        const room = await this.roomsService.createRoom(createDto, user.uuid);
+    async createRoom(@Args('room') room: CreateRoomDto, @User() user: JWTUser): Promise<Room> {
+        const roomResponse = await this.roomsService.createRoom(room, user.uuid);
 
         return {
-            id: room.id,
-            name: room.name
+            id: roomResponse.id,
+            name: roomResponse.name
         }
     }
 
     @Mutation('addPlantsToRoom')
-    async addPlantsToRoom(@Body() addPlantsDto: AddPlantsToRoomDto, @User() user: JWTUser): Promise<Room> {
+    async addPlantsToRoom(@Args('addPlants') addPlantsDto: AddPlantsToRoomDto, @User() user: JWTUser): Promise<Room> {
         const plantIds = addPlantsDto.plants.map(plant => plant.plantId);
 
         const room = await this.roomsService.addPlantsToRoom(addPlantsDto.roomId, plantIds, user.uuid);
@@ -72,7 +72,7 @@ export class RoomsResolver {
     }
 
     @Mutation('removePlantsFromRoom')
-    async removePlantsFromRoom(@Body() removePlantsDto: RemovePlantsFromRoomDto, @User() user: JWTUser): Promise<Room> {
+    async removePlantsFromRoom(@Args('removePlants') removePlantsDto: RemovePlantsFromRoomDto, @User() user: JWTUser): Promise<Room> {
         const plantIds = removePlantsDto.plants.map(plant => plant.plantId);
 
         const room = await this.roomsService.removePlantsFromRoom(removePlantsDto.roomId, plantIds, user.uuid);
@@ -91,5 +91,12 @@ export class RoomsResolver {
             id: room.id,
             name: room.name,
         }
+    }
+
+    @Mutation('addUserToRoom')
+    async addUserToRoom(@Args('addUser') addUserToRoom: AddUserToRoomDto, @User() user: JWTUser): Promise<boolean> {
+        await this.roomsService.addUserToRoom(addUserToRoom.roomId, user.uuid, addUserToRoom.userEmail);
+
+        return true;
     }
 }

@@ -58,14 +58,14 @@ export class RoomsService {
                 name: dto.name,
                 ownerId: userId,
                 inviteCode: inviteCode,
-                plants: {
+                plants: (dto.plants && dto.plants.length > 0) ? {
                     connect: dto.plants.map(plant => {
                         return {
                             id: plant.plantId,
                             ownerId: userId
                         }
                     })
-                }
+                } : undefined,
             },
         });
 
@@ -84,7 +84,8 @@ export class RoomsService {
             where: {
                 id: roomId,
                 ownerId: userId
-        }});
+            }
+        });
 
         if (!room) {
             throw new NotFoundException('Room not found');
@@ -151,6 +152,35 @@ export class RoomsService {
                         }
                     })
                 }
+            }
+        });
+    }
+
+    addUserToRoom(roomId: string, userId: string, addingUserEmail: string) {
+        const room = prisma.room.findFirst({
+            where: {
+                id: roomId, ownerId: userId
+            }
+        });
+
+        if (!room) {
+            throw new NotFoundException('Room not found/You are not the owner');
+        }
+
+        const user = prisma.user.findFirst({
+            where: {
+                email: addingUserEmail
+            }
+        });
+
+        if (!user) {
+            throw new NotFoundException('Adding user not found');
+        }
+
+        return prisma.roomUsers.create({
+            data: {
+                userId: userId,
+                roomId: roomId
             }
         });
     }

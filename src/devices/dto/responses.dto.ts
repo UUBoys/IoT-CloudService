@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PrismaClient } from "@prisma/client";
 
 export class DeviceInfo {
     @ApiProperty()
