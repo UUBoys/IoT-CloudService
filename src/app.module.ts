@@ -16,6 +16,7 @@ import { MeasurementsModule } from './measurements/measurements.module';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: ({ req }) => ({ req }),
+      introspection: true,
     }),
     AuthModule,
     PlantsModule,
