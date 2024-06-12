@@ -65,6 +65,7 @@ export class PlantsResolver {
                 imageUrl: plant.imageUrl,
                 description: plant.description,
                 type: plant.type,
+                lastHeartbeat: plant.lastHeartbeat?.toISOString(),
                 isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
             }
         });
@@ -82,6 +83,7 @@ export class PlantsResolver {
             imageUrl: plant.imageUrl,
             description: plant.description,
             type: plant.type,
+            lastHeartbeat: plant.lastHeartbeat?.toISOString(),
             isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
     }
@@ -144,6 +146,7 @@ export class PlantsResolver {
             name: plant.name,
             description: plant.description,
             type: plant.type,
+            lastHeartbeat: plant.lastHeartbeat?.toISOString(),
             isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
     }

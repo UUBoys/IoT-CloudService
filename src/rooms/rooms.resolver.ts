@@ -29,6 +29,7 @@ export class RoomsResolver {
                 id: plant.id,
                 name: plant.name,
                 type: plant.type,
+                lastHeartbeat: plant.lastHeartbeat?.toISOString(),
                 isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat),
             }
         });
