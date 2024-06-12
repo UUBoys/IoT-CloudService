@@ -16,13 +16,8 @@ export class PlantsService {
         throw new NotFoundException('Invalid pairing code');
     }
 
-    if(!plant.paired) {
-      // Plant is not paired yet
-      return plant;
-    }
-
     if(plant.userPaired) {
-        throw new NotFoundException('Plant already paired');
+        throw new NotFoundException('Plant already paired by user');
     }
 
     return prisma.plant.update({
@@ -36,6 +31,23 @@ export class PlantsService {
             userPaired: true,
         },
     });
+  }
+
+  async chechPairingProcess(pairingCode: string) {
+    let plant = await prisma.plant.findFirst({
+        where: {
+            pairingCode: pairingCode,
+        },
+    });
+
+    if(!plant) {
+        throw new NotFoundException('Invalid pairing code');
+    }
+
+    return {
+      userPaired: plant.userPaired,
+      serverPaired: plant.paired
+    };
   }
 
   findAllForUser(ownerId: string) {

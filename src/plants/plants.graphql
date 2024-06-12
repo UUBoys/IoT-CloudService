@@ -25,14 +25,15 @@ type RemovePlantResponse {
   unpaired: Boolean!
 }
 
-type PairPlantResponse {
-  plant: Plant!
-  isPairedWithServer: Boolean!
+type CheckPairingProcessResponse {
+  userPaired: Boolean!
+  serverPaired: Boolean!
 }
 
 type Query {
   plants: [Plant]!
   plant(id: String!): Plant
+  checkPairingProcess(pairingCode: String!): CheckPairingProcessResponse!
 }
 
 type Mutation {

@@ -62,6 +62,8 @@ export abstract class IQuery {
 
     abstract plant(id: string): Nullable<Plant> | Promise<Nullable<Plant>>;
 
+    abstract checkPairingProcess(pairingCode: string): CheckPairingProcessResponse | Promise<CheckPairingProcessResponse>;
+
     abstract rooms(): Nullable<Nullable<Room>[]> | Promise<Nullable<Nullable<Room>[]>>;
 
     abstract room(id: string): Nullable<Room> | Promise<Nullable<Room>>;
@@ -114,9 +116,9 @@ export class RemovePlantResponse {
     unpaired: boolean;
 }
 
-export class PairPlantResponse {
-    plant: Plant;
-    isPairedWithServer: boolean;
+export class CheckPairingProcessResponse {
+    userPaired: boolean;
+    serverPaired: boolean;
 }
 
 export class Room {

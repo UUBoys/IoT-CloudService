@@ -3,7 +3,13 @@ import {PlantsService} from './plants.service';
 import {AuthGuard} from "../auth/auth.guard";
 import {UseGuards} from "@nestjs/common";
 import {User} from "../decorators";
-import {Measurement, PairPlantResponse, Plant, RemovePlantResponse, Room} from "../graphql.schema";
+import {
+    CheckPairingProcessResponse,
+    Measurement,
+    Plant,
+    RemovePlantResponse,
+    Room
+} from "../graphql.schema";
 import {PairPlantDto, UpdatePlantDto} from "./dto/plant.dto";
 import {MeasurementsService} from "../measurements/measurements.service";
 import {RoomsService} from "../rooms/rooms.service";
@@ -64,17 +70,25 @@ export class PlantsResolver {
         };
     }
 
+   @Query("checkPairingProcess")
+   async checkPairingProcesss(@Args('pairingCode') pairingCode: string): Promise<CheckPairingProcessResponse> {
+         const pairingProcess = await this.plantsService.chechPairingProcess(pairingCode);
+
+         return {
+              userPaired: pairingProcess.userPaired,
+              serverPaired: pairingProcess.serverPaired
+         };
+   }
+
     @Mutation('pairPlant')
-    async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<PairPlantResponse> {
+    async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
         const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
 
         return {
-            plant: {
-                id: plant.id,
-                name: plant.name,
-                type: plant.type,
-            },
-            isPairedWithServer: plant.paired,
+            id: plant.id,
+            name: plant.name,
+            type: plant.type,
+            lastHeartbeat: plant.lastHeartbeat?.toISOString()
         };
     }
 
