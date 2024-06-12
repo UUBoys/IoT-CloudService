@@ -125,8 +125,8 @@ export class RoomsResolver {
     }
 
     @Mutation('updateRoom')
-    async updateRoom(@Args('updateRoom') updateRoom: UpdateRoomDto, @User() user: JWTUser): Promise<Room> {
-        const room = await this.roomsService.updateRoom(updateRoom, user.uuid);
+    async updateRoom(@Args('roomUpdate') roomUpdateDto: UpdateRoomDto, @User() user: JWTUser): Promise<Room> {
+        const room = await this.roomsService.updateRoom(roomUpdateDto, user.uuid);
 
         return {
             id: room.id,
