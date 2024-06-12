@@ -3,7 +3,7 @@ import {PlantsService} from './plants.service';
 import {AuthGuard} from "../auth/auth.guard";
 import {UseGuards} from "@nestjs/common";
 import {User} from "../decorators";
-import {Measurement, Plant, RemovePlantResponse, Room} from "../graphql.schema";
+import {Measurement, PairPlantResponse, Plant, RemovePlantResponse, Room} from "../graphql.schema";
 import {PairPlantDto, UpdatePlantDto} from "./dto/plant.dto";
 import {MeasurementsService} from "../measurements/measurements.service";
 import {RoomsService} from "../rooms/rooms.service";
@@ -65,13 +65,16 @@ export class PlantsResolver {
     }
 
     @Mutation('pairPlant')
-    async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
+    async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<PairPlantResponse> {
         const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
 
         return {
-            id: plant.id,
-            name: plant.name,
-            type: plant.type,
+            plant: {
+                id: plant.id,
+                name: plant.name,
+                type: plant.type,
+            },
+            isPairedWithServer: plant.paired,
         };
     }
 

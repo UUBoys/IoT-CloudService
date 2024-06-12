@@ -25,6 +25,11 @@ type RemovePlantResponse {
   unpaired: Boolean!
 }
 
+type PairPlantResponse {
+  plant: Plant!
+  isPairedWithServer: Boolean!
+}
+
 type Query {
   plants: [Plant]!
   plant(id: String!): Plant

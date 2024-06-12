@@ -68,6 +68,7 @@ export class DevicesService {
                 id,
             },
             data: {
+                lastHeartbeat: new Date(),
                 paired: true,
                 token,
             },

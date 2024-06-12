@@ -16,6 +16,11 @@ export class PlantsService {
         throw new NotFoundException('Invalid pairing code');
     }
 
+    if(!plant.paired) {
+      // Plant is not paired yet
+      return plant;
+    }
+
     if(plant.userPaired) {
         throw new NotFoundException('Plant already paired');
     }

@@ -114,6 +114,11 @@ export class RemovePlantResponse {
     unpaired: boolean;
 }
 
+export class PairPlantResponse {
+    plant: Plant;
+    isPairedWithServer: boolean;
+}
+
 export class Room {
     id: string;
     name: string;
