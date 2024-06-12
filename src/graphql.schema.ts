@@ -19,6 +19,12 @@ export class RegisterInput {
     name: string;
 }
 
+export class GetMeasurementsInput {
+    plantId: string;
+    before?: Nullable<string>;
+    after?: Nullable<string>;
+}
+
 export class PairPlantInput {
     name: string;
     type: string;
@@ -59,6 +65,8 @@ export class AddUserToRoomInput {
 
 export abstract class IQuery {
     abstract ping(): string | Promise<string>;
+
+    abstract getMeasurements(getMeasurementsInput?: Nullable<GetMeasurementsInput>): Nullable<Nullable<Measurement>[]> | Promise<Nullable<Nullable<Measurement>[]>>;
 
     abstract plants(): Nullable<Plant>[] | Promise<Nullable<Plant>[]>;
 

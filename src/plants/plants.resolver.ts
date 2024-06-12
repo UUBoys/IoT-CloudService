@@ -24,7 +24,7 @@ export class PlantsResolver {
 
     @ResolveField('measurements')
     async getMeasurements(@Parent() plant: Plant): Promise<Measurement[]> {
-        const measurements = await this.measurementsService.getMeasurements(plant.id);
+        const measurements = await this.measurementsService.getMeasurements({plantId: plant.id});
 
         const dtoOut = measurements.map(measurement => {
             return {

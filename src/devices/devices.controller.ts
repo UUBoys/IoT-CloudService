@@ -40,12 +40,14 @@ export class DevicesController {
 
   @Get(':id/tasks')
   @ApiResponse({ status: 200, type: () => TaskResponse, description: 'List of tasks' })
-  getDeviceTasks(@Param('id') id: string) {
+  @NoToken() //temporary
+  async getDeviceTasks(@Param('id') id: string) {
     return this.devicesService.getDeviceTasks(id);
   }
 
   @Patch(':id/tasks/:taskId')
   @ApiResponse({ status: 200, type: () => UpdateTaskResponse, description: 'List of tasks' })
+  @NoToken() //temporary
   async updateTask(@Param('id') id: string, @Param('taskId') taskId: string, @Body() updateTaskDto: UpdateTaskDto) {
     let task = await this.devicesService.updateTask(id, taskId, updateTaskDto);
 
@@ -58,7 +60,8 @@ export class DevicesController {
 
   @Post(':id/report')
   @ApiResponse({ status: 200, type: () => CreateReportResponse, description: 'List of tasks' })
-  reportDevice(@Param('id') id: string, @Body() reportDto: ReportDto) {
+  @NoToken() //temporary
+  async reportDevice(@Param('id') id: string, @Body() reportDto: ReportDto) {
     let report: Prisma.MeasurementCreateInput = {
       measurementType: reportDto.measurementType,
       value: parseFloat(reportDto.measurementValue),

@@ -3,3 +3,13 @@ type Measurement {
     value: Float!
     date: String!
 }
+
+input GetMeasurementsInput {
+    plantId: String!
+    before: String
+    after: String
+}
+
+type Query {
+    getMeasurements (getMeasurementsInput: GetMeasurementsInput): [Measurement]
+}

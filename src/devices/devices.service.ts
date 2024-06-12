@@ -1,10 +1,10 @@
-import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {prisma} from "src/util/db/client";
 import {Prisma} from "@prisma/client";
 
 @Injectable()
 export class DevicesService {
-    getByToken(token: string) {
+    async getByToken(token: string) {
         return prisma.plant.findFirstOrThrow({
             where: {
                 token,
@@ -37,13 +37,13 @@ export class DevicesService {
         return device
     }
 
-    createTask(task: Prisma.TaskCreateInput) {
+    async createTask(task: Prisma.TaskCreateInput) {
         return prisma.task.create({
             data: task,
         });
     }
 
-    updateTask(plantId: string, id: string, task: Prisma.TaskUpdateInput) {
+    async updateTask(plantId: string, id: string, task: Prisma.TaskUpdateInput) {
         return prisma.task.update({
             where: {
                 id,
@@ -54,14 +54,18 @@ export class DevicesService {
     }
 
     async pairDevice(id: string) {
-        let crypto = require("crypto");
-        let token = crypto.randomBytes(32).toString("hex");
-
-        const device = await prisma.plant.findFirstOrThrow({
+        const device = await prisma.plant.findFirst({
             where: {
                 id,
             },
         });
+
+        if(!device) {
+            throw new NotFoundException("Device not found");
+        }
+
+        let crypto = require("crypto");
+        let token = crypto.randomBytes(32).toString("hex");
 
         return prisma.plant.update({
             where: {
@@ -75,7 +79,17 @@ export class DevicesService {
         });
     }
 
-    getDeviceTasks(id: string) {
+    async getDeviceTasks(id: string) {
+        const plant = prisma.plant.findFirst({
+            where: {
+                id,
+            },
+        });
+
+        if (!plant) {
+            throw new NotFoundException("Device not found");
+        }
+
         return prisma.task.findMany({
             where: {
                 plantId: id,
@@ -83,7 +97,7 @@ export class DevicesService {
         });
     }
 
-    createReport(report: Prisma.MeasurementCreateInput) {
+    async createReport(report: Prisma.MeasurementCreateInput) {
         return prisma.measurement.create({
             data: report,
         });
