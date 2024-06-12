@@ -30,6 +30,8 @@ export class RoomsResolver {
                 name: plant.name,
                 type: plant.type,
                 lastHeartbeat: plant.lastHeartbeat?.toISOString(),
+                imageUrl: plant.imageUrl,
+                description: plant.description,
                 isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat),
             }
         });
