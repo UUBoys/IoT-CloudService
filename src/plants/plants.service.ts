@@ -181,4 +181,8 @@ export class PlantsService {
             }
         });
     }
+
+    async getPlantTypes() {
+        return prisma.plantTypes.findMany();
+    }
 }

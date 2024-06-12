@@ -42,6 +42,7 @@ type Query {
   plants: [Plant]!
   plant(id: String!): Plant
   checkPairingProcess(pairingCode: String!): CheckPairingProcessResponse!
+  getPlantTypes: [String]!
 }
 
 type Mutation {

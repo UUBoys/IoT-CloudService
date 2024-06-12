@@ -82,3 +82,8 @@ model Measurement {
   plant     Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
+
+model PlantTypes {
+  id        String   @id @default(cuid())
+  name      String
+}

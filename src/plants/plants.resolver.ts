@@ -107,6 +107,12 @@ export class PlantsResolver {
          };
    }
 
+   @Query('getPlantTypes')
+   async getPlantTypes(): Promise<string[]> {
+        const plantTypes = await this.plantsService.getPlantTypes();
+        return plantTypes.map(plantType => plantType.name);
+   }
+
     @Mutation('pairPlant')
     async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
         const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
