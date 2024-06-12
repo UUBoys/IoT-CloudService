@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { prisma } from 'src/util/db/client';
 import {PairPlantDto} from "./dto/plant.dto";
@@ -109,14 +109,25 @@ export class PlantsService {
       throw new NotFoundException('Plant not found');
     }
 
-    return prisma.plant.update({
+    const unpairedPlant = prisma.plant.update({
       where: {
         id: id,
         ownerId: ownerId,
-        },
+      },
       data: {
         ownerId: null,
+        name: null,
+        type: null,
+        roomId: null,
+        paired: false,
+        userPaired: false,
       }
     });
+
+    if(!unpairedPlant) {
+        throw new ForbiddenException('Not authorized to unpair plant');
+    }
+
+    return unpairedPlant;
   }
 }

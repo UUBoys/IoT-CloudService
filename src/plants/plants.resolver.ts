@@ -52,6 +52,7 @@ export class PlantsResolver {
             return {
                 id: plant.id,
                 name: plant.name,
+                imageUrl: plant.imageUrl,
                 type: plant.type,
             }
         });
@@ -66,6 +67,7 @@ export class PlantsResolver {
         return {
             id: plant.id,
             name: plant.name,
+            imageUrl: plant.imageUrl,
             type: plant.type,
         };
     }
@@ -87,6 +89,7 @@ export class PlantsResolver {
         return {
             id: plant.id,
             name: plant.name,
+            imageUrl: plant.imageUrl,
             type: plant.type,
             lastHeartbeat: plant.lastHeartbeat?.toISOString()
         };
@@ -98,6 +101,7 @@ export class PlantsResolver {
 
         return {
             id: plant.id,
+            imageUrl: plant.imageUrl,
             name: plant.name,
             type: plant.type,
         };

@@ -27,6 +27,7 @@ model Plant {
   type      String?
   ownerId   String?
   token     String  @unique
+  imageUrl  String?
   pairingCode String @unique
   paired    Boolean @default(false)
   userPaired Boolean @default(false)

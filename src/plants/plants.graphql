@@ -3,6 +3,7 @@ type Plant {
   type: String!
   name: String!
   room: Room
+  imageUrl: String
   lastHeartbeat: String
   measurements: [Measurement]
 }
@@ -11,12 +12,14 @@ input PairPlantInput {
   name: String!
   type: String!
   pairingCode: String!
+  imageUrl: String
 }
 
 input UpdatePlantInput {
   plantId: String
   name: String
   type: String
+  imageUrl: String
 }
 
 type RemovePlantResponse {
