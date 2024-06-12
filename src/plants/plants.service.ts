@@ -44,10 +44,7 @@ export class PlantsService {
         throw new NotFoundException('Invalid pairing code');
     }
 
-    return {
-      userPaired: plant.userPaired,
-      serverPaired: plant.paired
-    };
+    return plant;
   }
 
   findAllForUser(ownerId: string) {

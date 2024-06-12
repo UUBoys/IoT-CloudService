@@ -74,11 +74,12 @@ export class PlantsResolver {
 
    @Query("checkPairingProcess")
    async checkPairingProcesss(@Args('pairingCode') pairingCode: string): Promise<CheckPairingProcessResponse> {
-         const pairingProcess = await this.plantsService.chechPairingProcess(pairingCode);
+         const pairingPlant = await this.plantsService.chechPairingProcess(pairingCode);
 
          return {
-              userPaired: pairingProcess.userPaired,
-              serverPaired: pairingProcess.serverPaired
+              userPaired: pairingPlant.userPaired,
+              serverPaired: pairingPlant.paired,
+              plantId: pairingPlant.id
          };
    }
 

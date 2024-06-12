@@ -31,6 +31,7 @@ type RemovePlantResponse {
 type CheckPairingProcessResponse {
   userPaired: Boolean!
   serverPaired: Boolean!
+  plantId: String!
 }
 
 type Query {

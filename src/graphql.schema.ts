@@ -130,6 +130,7 @@ export class RemovePlantResponse {
 export class CheckPairingProcessResponse {
     userPaired: boolean;
     serverPaired: boolean;
+    plantId: string;
 }
 
 export class Room {
