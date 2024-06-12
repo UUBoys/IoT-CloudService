@@ -99,6 +99,11 @@ export class PlantsResolver {
 
         // Timeout of the pairing process - start
         const timeout = setTimeout(() => this.plantsService.stopPairingProcess(plant.id), 120000);
+        // Timeout exists, delete it
+        if(this.schedulerRegistry.doesExist("timeout", this.getTimeoutKey(plant.id))) {
+            this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(plant.id));
+        }
+
         this.schedulerRegistry.addTimeout(this.getTimeoutKey(plant.id), timeout);
 
         return {

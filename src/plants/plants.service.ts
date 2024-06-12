@@ -138,7 +138,8 @@ export class PlantsService {
     });
 
     if(!plant) {
-        throw new NotFoundException('Cant stop pairing process - plant not found');
+        console.error('Cant stop pairing process - plant not found');
+        return;
     }
 
     // The device is paired, no need to stop the process
