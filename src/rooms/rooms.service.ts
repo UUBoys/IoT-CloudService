@@ -189,10 +189,10 @@ export class RoomsService {
         });
     }
 
-    addUserToRoom(roomId: string, userId: string, inviteCode: string) {
-        const room = prisma.room.findFirst({
+    async addUserToRoom(userId: string, inviteCode: string) {
+        const room = await prisma.room.findFirst({
             where: {
-                id: roomId, inviteCode: inviteCode
+                inviteCode: inviteCode
             }
         });
 
@@ -200,7 +200,7 @@ export class RoomsService {
             throw new NotFoundException('Room not found/wrong invite code');
         }
 
-        const user = prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
                 id: userId
             }
@@ -213,7 +213,7 @@ export class RoomsService {
         return prisma.roomUsers.create({
             data: {
                 userId: userId,
-                roomId: roomId
+                roomId: room.id
             }
         });
     }

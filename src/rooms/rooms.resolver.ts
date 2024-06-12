@@ -7,8 +7,7 @@ import {UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
 import {
     AddPlantsToRoomDto,
-    AddUserToRoomDto,
-    CreateRoomDto,
+    CreateRoomDto, JoinRoomDto,
     RemovePlantsFromRoomDto,
     UpdateRoomDto
 } from "./dto/room.dto";
@@ -117,9 +116,9 @@ export class RoomsResolver {
         }
     }
 
-    @Mutation('addUserToRoom')
-    async addUserToRoom(@Args('addUser') addUserToRoom: AddUserToRoomDto, @User() user: JWTUser): Promise<boolean> {
-        await this.roomsService.addUserToRoom(addUserToRoom.roomId, user.uuid, addUserToRoom.inviteCode);
+    @Mutation('joinRoom')
+    async joinRoom(@Args('joinRoom') joinRoomDto: JoinRoomDto, @User() user: JWTUser): Promise<boolean> {
+        await this.roomsService.addUserToRoom(user.uuid, joinRoomDto.inviteCode);
 
         return true;
     }

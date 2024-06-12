@@ -60,8 +60,7 @@ export class RemovePlantsFromRoomInput {
     plants?: Nullable<Nullable<RoomPlantInput>[]>;
 }
 
-export class AddUserToRoomInput {
-    roomId: string;
+export class JoinRoomInput {
     inviteCode: string;
 }
 
@@ -99,9 +98,9 @@ export abstract class IMutation {
 
     abstract createRoom(room: CreateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 
-    abstract updateRoom(roomUpdate: UpdatePlantInput): Nullable<Room> | Promise<Nullable<Room>>;
+    abstract updateRoom(roomUpdate: UpdateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 
-    abstract addUserToRoom(addUser: AddUserToRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
+    abstract joinRoom(joinRoom: JoinRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
 
     abstract addPlantsToRoom(addPlants: AddPlantsToRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 

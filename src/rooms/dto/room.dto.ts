@@ -1,7 +1,6 @@
 import {
     AddPlantsToRoomInput,
-    AddUserToRoomInput,
-    CreateRoomInput,
+    CreateRoomInput, JoinRoomInput,
     RemovePlantsFromRoomInput,
     RoomPlantInput, UpdateRoomInput
 } from "../../graphql.schema";
@@ -46,10 +45,7 @@ export class RemovePlantsFromRoomDto extends RemovePlantsFromRoomInput{
     plants: RoomPlantDto[];
 }
 
-export class AddUserToRoomDto extends AddUserToRoomInput {
-    @Length(3)
-    roomId: string;
-
+export class JoinRoomDto extends JoinRoomInput {
     @Length(64)
     inviteCode: string;
 }
