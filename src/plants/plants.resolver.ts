@@ -13,13 +13,19 @@ import {
 import {PairPlantDto, UpdatePlantDto} from "./dto/plant.dto";
 import {MeasurementsService} from "../measurements/measurements.service";
 import {RoomsService} from "../rooms/rooms.service";
+import {SchedulerRegistry} from "@nestjs/schedule";
 
 @Resolver('Plant')
 @UseGuards(AuthGuard)
 export class PlantsResolver {
     constructor(private readonly plantsService: PlantsService,
                 private readonly measurementsService: MeasurementsService,
-                private readonly roomsService: RoomsService) {
+                private readonly roomsService: RoomsService,
+                private readonly schedulerRegistry: SchedulerRegistry) {
+    }
+
+    getTimeoutKey(plantId: string) {
+        return `pairing-${plantId}`;
     }
 
     @ResolveField('measurements')
@@ -76,6 +82,10 @@ export class PlantsResolver {
    async checkPairingProcesss(@Args('pairingCode') pairingCode: string): Promise<CheckPairingProcessResponse> {
          const pairingPlant = await this.plantsService.chechPairingProcess(pairingCode);
 
+         if(pairingPlant.userPaired && pairingPlant.paired) {
+             this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(pairingPlant.id));
+         }
+
          return {
               userPaired: pairingPlant.userPaired,
               serverPaired: pairingPlant.paired,
@@ -86,6 +96,10 @@ export class PlantsResolver {
     @Mutation('pairPlant')
     async pairPlant(@Args('pairPlantInput') pairPlantDto: PairPlantDto, @User() user: JWTUser): Promise<Plant> {
         const plant = await this.plantsService.pair(pairPlantDto, user.uuid);
+
+        // Timeout of the pairing process - start
+        const timeout = setTimeout(() => this.plantsService.stopPairingProcess(plant.id), 120000);
+        this.schedulerRegistry.addTimeout(this.getTimeoutKey(plant.id), timeout);
 
         return {
             id: plant.id,

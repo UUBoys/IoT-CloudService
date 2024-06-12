@@ -1,4 +1,4 @@
-import {IsDecimal, IsString, MinLength} from "class-validator";
+import {IsNumber, IsString, MinLength} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
 
 export class ReportDto {
@@ -6,7 +6,7 @@ export class ReportDto {
     @ApiProperty()
     measurementType: string;
 
-    @IsDecimal()
+    @IsNumber()
     @ApiProperty()
     measurementValue: string;
 

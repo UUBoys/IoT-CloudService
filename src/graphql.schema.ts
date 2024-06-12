@@ -27,6 +27,7 @@ export class GetMeasurementsInput {
 
 export class PairPlantInput {
     name: string;
+    description?: Nullable<string>;
     type: string;
     pairingCode: string;
     imageUrl?: Nullable<string>;
@@ -35,6 +36,7 @@ export class PairPlantInput {
 export class UpdatePlantInput {
     plantId?: Nullable<string>;
     name?: Nullable<string>;
+    description?: Nullable<string>;
     type?: Nullable<string>;
     imageUrl?: Nullable<string>;
 }
@@ -115,6 +117,7 @@ export class Plant {
     id: string;
     type: string;
     name: string;
+    description?: Nullable<string>;
     room?: Nullable<Room>;
     imageUrl?: Nullable<string>;
     lastHeartbeat?: Nullable<string>;

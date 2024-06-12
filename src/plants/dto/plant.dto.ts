@@ -16,7 +16,11 @@ export class PairPlantDto extends PairPlantInput {
 
     @IsOptional()
     @IsString()
-    imageUrl: string;
+    imageUrl?: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
 }
 
 export class UpdatePlantDto extends UpdatePlantInput {
@@ -35,4 +39,8 @@ export class UpdatePlantDto extends UpdatePlantInput {
     @IsOptional()
     @IsString()
     imageUrl: string;
+
+    @IsOptional()
+    @IsString()
+    description: string;
 }

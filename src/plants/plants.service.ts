@@ -2,6 +2,7 @@ import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common'
 import { Prisma } from '@prisma/client';
 import { prisma } from 'src/util/db/client';
 import {PairPlantDto} from "./dto/plant.dto";
+import {Timeout} from "@nestjs/schedule";
 
 @Injectable()
 export class PlantsService {
@@ -27,6 +28,7 @@ export class PlantsService {
         data: {
             ownerId: userId,
             name: dto.name,
+            description: dto.description,
             type: dto.type,
             userPaired: true,
         },
@@ -126,5 +128,32 @@ export class PlantsService {
     }
 
     return unpairedPlant;
+  }
+
+  async stopPairingProcess(plantId: string) {
+    let plant = await prisma.plant.findFirst({
+        where: {
+            id: plantId,
+        },
+    });
+
+    if(!plant) {
+        throw new NotFoundException('Cant stop pairing process - plant not found');
+    }
+
+    // The device is paired, no need to stop the process
+    if(plant.userPaired && plant.paired) {
+        return;
+    }
+
+    prisma.plant.update({
+        where: {
+            id: plantId,
+        },
+        data: {
+            userPaired: false,
+            paired: false
+        }
+    });
   }
 }
