@@ -88,7 +88,7 @@ export class PlantsResolver {
 
    @Query("checkPairingProcess")
    async checkPairingProcesss(@Args('pairingCode') pairingCode: string): Promise<CheckPairingProcessResponse> {
-         const pairingPlant = await this.plantsService.chechPairingProcess(pairingCode);
+         const pairingPlant = await this.plantsService.checkPairingProcess(pairingCode);
 
          if(pairingPlant.userPaired && pairingPlant.paired) {
              try {
