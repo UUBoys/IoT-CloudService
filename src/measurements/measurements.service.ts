@@ -6,9 +6,16 @@ import {GetMeasurementDto} from "./dto/measurement.dto";
 export class MeasurementsService {
 
     async getMeasurements(dto: GetMeasurementDto) {
-        const startDate = new Date(dto.after);
-        const endDate = new Date(dto.before);
+        let startDate = dto.after ? new Date(dto.after) : undefined;
+        let endDate = dto.before ? new Date(dto.before) : undefined;
 
+        if(isNaN(startDate.getTime())) {
+            startDate = undefined;
+        }
+
+        if(isNaN(endDate.getTime())) {
+            endDate = undefined;
+        }
 
         return prisma.measurement.findMany({
             where: {
