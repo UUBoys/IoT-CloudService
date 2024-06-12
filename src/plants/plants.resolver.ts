@@ -63,6 +63,7 @@ export class PlantsResolver {
                 id: plant.id,
                 name: plant.name,
                 imageUrl: plant.imageUrl,
+                description: plant.description,
                 type: plant.type,
                 isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
             }
@@ -79,6 +80,7 @@ export class PlantsResolver {
             id: plant.id,
             name: plant.name,
             imageUrl: plant.imageUrl,
+            description: plant.description,
             type: plant.type,
             isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
@@ -125,6 +127,7 @@ export class PlantsResolver {
             id: plant.id,
             name: plant.name,
             imageUrl: plant.imageUrl,
+            description: plant.description,
             type: plant.type,
             lastHeartbeat: plant.lastHeartbeat?.toISOString(),
             isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
@@ -139,6 +142,7 @@ export class PlantsResolver {
             id: plant.id,
             imageUrl: plant.imageUrl,
             name: plant.name,
+            description: plant.description,
             type: plant.type,
             isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
