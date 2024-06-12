@@ -14,29 +14,22 @@ export class DeviceGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
-    const isNoTokenRoute = this.reflector.getAllAndOverride<boolean>(NO_TOKEN, [
+    /*const isNoTokenRoute = this.reflector.getAllAndOverride<boolean>(NO_TOKEN, [
       context.getHandler(),
       context.getClass(),
     ]);
 
     if (isNoTokenRoute) {
       return true;
-    }
+    } */
 
     const request = context.switchToHttp().getRequest();
 
-    const token = this.extractTokenFromHeader(request);
-    if (!token) {
-      throw new UnauthorizedException("No token provided");
-    }
+    // Get path param
+    const plantId = request.params.id as string;
 
     try {
-      const plant = await this.deviceService.getByToken(token);
-      
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      await this.deviceService.heartbeat(plant.id)
-      request["plant"] = plant;
+      await this.deviceService.heartbeat(plantId);
     } catch {
       // Log that device tried to access but is missing from database?
       throw new UnauthorizedException("Plant is not present in the database");

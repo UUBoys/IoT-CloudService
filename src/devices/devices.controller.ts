@@ -14,7 +14,6 @@ export class DevicesController {
 
   @Get(':id')
   @ApiResponse({ status: 200, type: () => DeviceInfo, description: 'Device information' })
-  @NoToken()
   async getDeviceInfo(@Param('id') id: string) {
     let device = await this.devicesService.getDevice(id);
 
@@ -27,7 +26,6 @@ export class DevicesController {
 
   @Post(':id/pair')
   @ApiResponse({ status: 200, type: () => PairDeviceResponse, description: 'Device pair response' })
-  @NoToken()
   async pairDevice(@Param('id') id: string) {
     let pairing = await this.devicesService.pairDevice(id);
 
@@ -40,14 +38,12 @@ export class DevicesController {
 
   @Get(':id/tasks')
   @ApiResponse({ status: 200, type: () => TaskResponse, description: 'List of tasks' })
-  @NoToken() //temporary
   async getDeviceTasks(@Param('id') id: string) {
     return this.devicesService.getDeviceTasks(id);
   }
 
   @Patch(':id/tasks/:taskId')
   @ApiResponse({ status: 200, type: () => UpdateTaskResponse, description: 'List of tasks' })
-  @NoToken() //temporary
   async updateTask(@Param('id') id: string, @Param('taskId') taskId: string, @Body() updateTaskDto: UpdateTaskDto) {
     let task = await this.devicesService.updateTask(id, taskId, updateTaskDto);
 
@@ -60,7 +56,6 @@ export class DevicesController {
 
   @Post(':id/report')
   @ApiResponse({ status: 200, type: () => CreateReportResponse, description: 'List of tasks' })
-  @NoToken() //temporary
   async reportDevice(@Param('id') id: string, @Body() reportDto: ReportDto) {
     let report: Prisma.MeasurementCreateInput = {
       measurementType: reportDto.measurementType,
