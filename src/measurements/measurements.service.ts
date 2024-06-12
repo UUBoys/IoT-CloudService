@@ -20,7 +20,7 @@ export class MeasurementsService {
         return prisma.measurement.findMany({
             where: {
                 plantId: dto.plantId,
-                createdAt: startDate && endDate ? {
+                createdAt: startDate || endDate ? {
                     gte: startDate,
                     lte: endDate
                 } : undefined
