@@ -38,22 +38,12 @@ export class RoomsResolver {
     async rooms(@User() user: JWTUser): Promise<Room[]> {
         let rooms = await this.roomsService.getRoomsByUserId(user.uuid);
 
-        // Flatten the array of arrays
-        let flatRooms = rooms.flat();
-
-        return flatRooms.map(room => {
-            if ('inviteCode' in room) {
+        return rooms.map(room => {
                 return {
                     id: room.id,
                     name: room.name,
-                    inviteCode: room.inviteCode
+                    inviteCode: user.uuid == room.ownerId ? room.inviteCode : undefined,
                 }
-            } else {
-                return {
-                    id: room.id,
-                    name: room.name,
-                }
-            }
         });
     }
 

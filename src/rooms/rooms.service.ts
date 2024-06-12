@@ -39,12 +39,7 @@ export class RoomsService {
     }
 
     getRoomsByUserId(userId: string) {
-        const ownerRooms = prisma.room.findMany({
-            select: {
-                id: true,
-                name: true,
-                inviteCode: true,
-            },
+        const rooms = prisma.room.findMany({
             where: {
                 users: {
                     some: {
@@ -54,20 +49,7 @@ export class RoomsService {
             }
         });
 
-        const userRooms = prisma.room.findMany({
-            select: {
-                id: true,
-                name: true,
-                inviteCode: false,
-            },
-            where: {
-                ownerId: userId
-            }
-        });
-
-        const allRooms = prisma.$transaction([ownerRooms, userRooms]);
-
-        return allRooms;
+        return rooms;
     }
 
     async createRoom(dto: CreateRoomDto, userId: string) {
