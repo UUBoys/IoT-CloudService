@@ -41,7 +41,7 @@ type Query {
 
 type Mutation {
     createRoom(room: CreateRoomInput!): Room
-    updateRoom(roomUpdate: UpdatePlantInput!): Room
+    updateRoom(roomUpdate: UpdateRoomInput!): Room
     addUserToRoom(addUser: AddUserToRoomInput!): Boolean
     addPlantsToRoom(addPlants: AddPlantsToRoomInput!): Room
     removePlantsFromRoom(removePlants: RemovePlantsFromRoomInput!): Room
