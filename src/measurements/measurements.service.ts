@@ -9,11 +9,11 @@ export class MeasurementsService {
         let startDate = dto.after ? new Date(dto.after) : undefined;
         let endDate = dto.before ? new Date(dto.before) : undefined;
 
-        if(isNaN(startDate.getTime())) {
+        if(startDate && isNaN(startDate.getTime())) {
             startDate = undefined;
         }
 
-        if(isNaN(endDate.getTime())) {
+        if(endDate && isNaN(endDate.getTime())) {
             endDate = undefined;
         }
 
