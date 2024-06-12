@@ -28,6 +28,7 @@ export class PlantsService {
                 ownerId: userId,
                 name: dto.name,
                 description: dto.description,
+                imageUrl: dto.imageUrl,
                 type: dto.type,
                 userPaired: true,
             },
