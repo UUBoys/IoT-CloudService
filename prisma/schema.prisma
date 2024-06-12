@@ -32,9 +32,9 @@ model Plant {
   pairingCode String @unique
   paired    Boolean @default(false)
   userPaired Boolean @default(false)
-  owner     User?     @relation(fields: [ownerId], references: [id])
+  owner     User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   roomId    String?
-  room      Room?    @relation(fields: [roomId], references: [id])
+  room      Room?    @relation(fields: [roomId], references: [id], onDelete: SetNull)
   tasks     Task[]
   measurements Measurement[]
   lastHeartbeat DateTime
@@ -48,7 +48,7 @@ model Task {
   completed Boolean
   success   Boolean
   plantId   String
-  plant     Plant    @relation(fields: [plantId], references: [id])
+  plant     Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -69,8 +69,8 @@ model RoomUsers {
   id     String @id @default(cuid())
   userId String
   roomId String
-  user   User   @relation(fields: [userId], references: [id])
-  room   Room   @relation(fields: [roomId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model Measurement {
@@ -79,6 +79,6 @@ model Measurement {
   unit      String
   measurementType String
   plantId   String
-  plant     Plant    @relation(fields: [plantId], references: [id])
+  plant     Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }

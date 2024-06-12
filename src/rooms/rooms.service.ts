@@ -99,8 +99,8 @@ export class RoomsService {
         return room;
     }
 
-    deleteRoom(roomId: string, userId: string) {
-        const room = prisma.room.findFirst({
+    async deleteRoom(roomId: string, userId: string) {
+        const room = await prisma.room.findFirst({
             where: {
                 id: roomId,
                 ownerId: userId
@@ -108,11 +108,11 @@ export class RoomsService {
         });
 
         if (!room) {
-            throw new NotFoundException('Room not found');
+            throw new NotFoundException('Room not found/Not authorized to delete room');
         }
 
         // unlink plants from room
-        prisma.room.update({
+        await prisma.room.update({
             where: {
                 id: roomId
             },
@@ -122,7 +122,6 @@ export class RoomsService {
                 }
             }
         });
-
 
         return prisma.room.delete({
             where: {
