@@ -111,10 +111,23 @@ export class RoomsService {
             throw new NotFoundException('Room not found');
         }
 
+        // unlink plants from room
+        prisma.room.update({
+            where: {
+                id: roomId
+            },
+            data: {
+                plants: {
+                    set: []
+                }
+            }
+        });
+
+
         return prisma.room.delete({
             where: {
                 id: roomId
-            }
+            },
         });
     }
 

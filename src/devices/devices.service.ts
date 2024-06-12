@@ -1,9 +1,28 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {prisma} from "src/util/db/client";
 import {Prisma} from "@prisma/client";
+import {Cron, CronExpression} from "@nestjs/schedule";
 
 @Injectable()
 export class DevicesService {
+    @Cron(CronExpression.EVERY_30_MINUTES)
+    async markOffline() {
+        const plants = await prisma.plant.updateMany({
+            where: {
+                // lastHeartbeat older than 3O minutes
+                lastHeartbeat: {
+                    lt: new Date(Date.now() - 30 * 60 * 1000),
+                },
+                paired: true,
+            },
+            data: {
+                paired: false,
+            },
+        });
+
+        console.log(plants.count + " devices marked as offline");
+    }
+
     async getByToken(token: string) {
         return prisma.plant.findFirstOrThrow({
             where: {

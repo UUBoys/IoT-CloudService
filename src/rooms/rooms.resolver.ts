@@ -3,7 +3,7 @@ import {RoomsService} from './rooms.service';
 import {User} from "../decorators";
 import {Plant, Room} from "../graphql.schema";
 import {AuthGuard} from "../auth/auth.guard";
-import {Body, UseGuards} from "@nestjs/common";
+import {UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
 import {
     AddPlantsToRoomDto,
@@ -43,7 +43,7 @@ export class RoomsResolver {
         let flatRooms = rooms.flat();
 
         return flatRooms.map(room => {
-            if ('inviteCode' in room && room.inviteCode === null) {
+            if ('inviteCode' in room) {
                 return {
                     id: room.id,
                     name: room.name,
@@ -64,6 +64,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
+            inviteCode: room.inviteCode,
             name: room.name,
         }
     }
@@ -74,6 +75,7 @@ export class RoomsResolver {
 
         return {
             id: roomResponse.id,
+            inviteCode: roomResponse.inviteCode,
             name: roomResponse.name
         }
     }
@@ -86,6 +88,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
+            inviteCode: room.inviteCode,
             name: room.name,
         }
     }
@@ -98,6 +101,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
+            inviteCode: room.inviteCode,
             name: room.name,
         }
     }
@@ -108,6 +112,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
+            inviteCode: room.inviteCode,
             name: room.name,
         }
     }
@@ -125,6 +130,7 @@ export class RoomsResolver {
 
         return {
             id: room.id,
+            inviteCode: room.inviteCode,
             name: room.name,
         }
     }
