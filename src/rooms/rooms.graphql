@@ -29,6 +29,11 @@ input AddUserToRoomInput {
     inviteCode: String!
 }
 
+input UpdateRoomInput {
+    roomId: String!
+    name: String!
+}
+
 type Query {
     rooms: [Room]
     room(id: String!): Room
@@ -36,6 +41,7 @@ type Query {
 
 type Mutation {
     createRoom(room: CreateRoomInput!): Room
+    updateRoom(roomUpdate: UpdatePlantInput!): Room
     addUserToRoom(addUser: AddUserToRoomInput!): Boolean
     addPlantsToRoom(addPlants: AddPlantsToRoomInput!): Room
     removePlantsFromRoom(removePlants: RemovePlantsFromRoomInput!): Room

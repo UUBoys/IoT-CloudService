@@ -28,6 +28,10 @@ export class PlantsResolver {
         return `pairing-${plantId}`;
     }
 
+    static isDeviceOnline(lastHeartbeat: Date): boolean {
+        return lastHeartbeat && lastHeartbeat.getTime() > Date.now() - 15 * 60 * 1000;
+    }
+
     @ResolveField('measurements')
     async getMeasurements(@Parent() plant: Plant): Promise<Measurement[]> {
         const measurements = await this.measurementsService.getMeasurements({plantId: plant.id});
@@ -60,6 +64,7 @@ export class PlantsResolver {
                 name: plant.name,
                 imageUrl: plant.imageUrl,
                 type: plant.type,
+                isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
             }
         });
 
@@ -75,6 +80,7 @@ export class PlantsResolver {
             name: plant.name,
             imageUrl: plant.imageUrl,
             type: plant.type,
+            isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
     }
 
@@ -83,7 +89,11 @@ export class PlantsResolver {
          const pairingPlant = await this.plantsService.chechPairingProcess(pairingCode);
 
          if(pairingPlant.userPaired && pairingPlant.paired) {
-             this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(pairingPlant.id));
+             try {
+                 this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(pairingPlant.id));
+             } catch (e) {
+                 console.error(e);
+             }
          }
 
          return {
@@ -99,9 +109,14 @@ export class PlantsResolver {
 
         // Timeout of the pairing process - start
         const timeout = setTimeout(() => this.plantsService.stopPairingProcess(plant.id), 120000);
+
         // Timeout exists, delete it
         if(this.schedulerRegistry.doesExist("timeout", this.getTimeoutKey(plant.id))) {
-            this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(plant.id));
+            try {
+                this.schedulerRegistry.deleteTimeout(this.getTimeoutKey(plant.id));
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         this.schedulerRegistry.addTimeout(this.getTimeoutKey(plant.id), timeout);
@@ -111,7 +126,8 @@ export class PlantsResolver {
             name: plant.name,
             imageUrl: plant.imageUrl,
             type: plant.type,
-            lastHeartbeat: plant.lastHeartbeat?.toISOString()
+            lastHeartbeat: plant.lastHeartbeat?.toISOString(),
+            isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
     }
 
@@ -124,6 +140,7 @@ export class PlantsResolver {
             imageUrl: plant.imageUrl,
             name: plant.name,
             type: plant.type,
+            isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat)
         };
     }
 

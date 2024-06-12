@@ -5,7 +5,14 @@ import {Plant, Room} from "../graphql.schema";
 import {AuthGuard} from "../auth/auth.guard";
 import {Body, UseGuards} from "@nestjs/common";
 import {PlantsService} from "../plants/plants.service";
-import {AddPlantsToRoomDto, AddUserToRoomDto, CreateRoomDto, RemovePlantsFromRoomDto} from "./dto/room.dto";
+import {
+    AddPlantsToRoomDto,
+    AddUserToRoomDto,
+    CreateRoomDto,
+    RemovePlantsFromRoomDto,
+    UpdateRoomDto
+} from "./dto/room.dto";
+import {PlantsResolver} from "../plants/plants.resolver";
 
 @Resolver('Room')
 @UseGuards(AuthGuard)
@@ -23,6 +30,7 @@ export class RoomsResolver {
                 id: plant.id,
                 name: plant.name,
                 type: plant.type,
+                isOnline: PlantsResolver.isDeviceOnline(plant.lastHeartbeat),
             }
         });
     }
@@ -109,5 +117,15 @@ export class RoomsResolver {
         await this.roomsService.addUserToRoom(addUserToRoom.roomId, user.uuid, addUserToRoom.inviteCode);
 
         return true;
+    }
+
+    @Mutation('updateRoom')
+    async updateRoom(@Args('updateRoom') updateRoom: UpdateRoomDto, @User() user: JWTUser): Promise<Room> {
+        const room = await this.roomsService.updateRoom(updateRoom, user.uuid);
+
+        return {
+            id: room.id,
+            name: room.name,
+        }
     }
 }

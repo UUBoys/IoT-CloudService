@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {prisma} from "../util/db/client";
-import {CreateRoomDto} from "./dto/room.dto";
+import {CreateRoomDto, UpdateRoomDto} from "./dto/room.dto";
 import crypto from "crypto";
 
 @Injectable()
@@ -201,6 +201,28 @@ export class RoomsService {
             data: {
                 userId: userId,
                 roomId: roomId
+            }
+        });
+    }
+
+    async updateRoom(dto: UpdateRoomDto, userId: string) {
+        const room = prisma.room.findFirst({
+            where: {
+                id: dto.roomId,
+                ownerId: userId
+            }
+        });
+
+        if (!room) {
+            throw new NotFoundException('Room not found');
+        }
+
+        return prisma.room.update({
+            where: {
+                id: dto.roomId
+            },
+            data: {
+                name: dto.name
             }
         });
     }

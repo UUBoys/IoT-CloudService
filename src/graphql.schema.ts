@@ -65,6 +65,11 @@ export class AddUserToRoomInput {
     inviteCode: string;
 }
 
+export class UpdateRoomInput {
+    roomId: string;
+    name: string;
+}
+
 export abstract class IQuery {
     abstract ping(): string | Promise<string>;
 
@@ -94,6 +99,8 @@ export abstract class IMutation {
 
     abstract createRoom(room: CreateRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
 
+    abstract updateRoom(roomUpdate: UpdatePlantInput): Nullable<Room> | Promise<Nullable<Room>>;
+
     abstract addUserToRoom(addUser: AddUserToRoomInput): Nullable<boolean> | Promise<Nullable<boolean>>;
 
     abstract addPlantsToRoom(addPlants: AddPlantsToRoomInput): Nullable<Room> | Promise<Nullable<Room>>;
@@ -121,6 +128,7 @@ export class Plant {
     room?: Nullable<Room>;
     imageUrl?: Nullable<string>;
     lastHeartbeat?: Nullable<string>;
+    isOnline: boolean;
     measurements?: Nullable<Nullable<Measurement>[]>;
 }
 

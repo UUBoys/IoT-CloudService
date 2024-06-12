@@ -3,7 +3,7 @@ import {
     AddUserToRoomInput,
     CreateRoomInput,
     RemovePlantsFromRoomInput,
-    RoomPlantInput
+    RoomPlantInput, UpdateRoomInput
 } from "../../graphql.schema";
 import {ArrayMinSize, IsArray, IsEmail, IsOptional, Length, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
@@ -52,4 +52,12 @@ export class AddUserToRoomDto extends AddUserToRoomInput {
 
     @Length(64)
     inviteCode: string;
+}
+
+export class UpdateRoomDto extends UpdateRoomInput {
+    @Length(3)
+    roomId: string;
+
+    @Length(3)
+    name: string;
 }

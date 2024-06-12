@@ -6,6 +6,7 @@ type Plant {
   room: Room
   imageUrl: String
   lastHeartbeat: String
+  isOnline: Boolean!
   measurements: [Measurement]
 }
 
