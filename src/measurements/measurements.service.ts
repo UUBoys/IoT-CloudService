@@ -25,6 +25,9 @@ export class MeasurementsService {
                     lte: endDate
                 } : undefined
             },
+            orderBy: {
+                createdAt: 'desc'
+            }
         })
     }
 }
